@@ -784,5 +784,5 @@ if predict:
 
     st.divider()
     st.caption("Freight rate forecasts are trained on real historical BDRY (Baltic dry bulk shipping) "
-               "market data as a proxy for freight rates, since no official dataset was provided with "
+               "market data as a proxy for freight rates, since no official freight dataset was provided with "
                "the problem statement. Origin distance and vessel economies-of-scale factors are illustrative estimates.")
