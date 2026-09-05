@@ -507,10 +507,10 @@ if predict:
                         unsafe_allow_html=True
                     )
 
-                    # Graceful image loading - fails safely if images are missing/inaccessible
+                    # Vessel Photo Display
                     if os.path.exists(img_path):
                         try:
-                            st.image(img_path, caption=f"{vessel_name} Class", width=220)
+                            st.image(img_path, caption=f"{vessel_name} Class Bulk Carrier", use_container_width=True)
                         except Exception:
                             st.caption(f"🚢 {vessel_name} Class Bulk Carrier")
                     else:
@@ -586,9 +586,9 @@ if predict:
                         source=img_src,
                         xref="paper",
                         yref="y",
-                        x=-0.04,
+                        x=-0.08,
                         y=y_categories[i],
-                        sizex=0.14,
+                        sizex=0.15,
                         sizey=0.85,
                         xanchor="right",
                         yanchor="middle",
@@ -599,7 +599,7 @@ if predict:
             max_c = max(v_costs) if v_costs else 30
             fig_vessel.update_layout(
                 height=max(180, len(vessel_names) * 65 + 70),
-                margin=dict(l=190, r=40, t=10, b=30),
+                margin=dict(l=240, r=40, t=10, b=30),
                 xaxis=dict(
                     title="Estimated Freight Rate (USD/ton)",
                     range=[0, max_c * 1.5],
