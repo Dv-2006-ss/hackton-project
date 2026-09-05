@@ -1,0 +1,8 @@
+streamlit
+pandas
+numpy
+statsmodels
+arch
+plotly
+yfinance
+Pillow
