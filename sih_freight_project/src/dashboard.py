@@ -693,8 +693,8 @@ if predict:
         st.info(insight_idle)
 
     with tab4:
-        st.markdown(f"#### Procurement Strategy: Spot Booking vs. Multi-Voyage Contract")
-        st.caption(f"Average voyage rate comparison across 1,000 simulated market trajectories for {cargo_volume:,} tons of {material}.")
+        st.markdown(f"#### Spot Booking vs. Multi-Voyage Contract: Which Costs Less?")
+        st.caption("Spot offers flexibility with no commitment; Multi-Voyage locks in a rate for price certainty — here's which is cheaper for this route.")
 
         spot_cost = strategy["spot_avg_cost"]
         multi_cost = strategy["multivoyage_avg_cost"]
@@ -702,7 +702,7 @@ if predict:
 
         strat_names = ["Spot Booking", "Multi-Voyage Contract"]
         strat_costs = [spot_cost, multi_cost]
-        strat_colors = ["#94A3B8", "#2563EB"] if is_multi_better else ["#2563EB", "#94A3B8"]
+        strat_colors = ["#94A3B8", "#3B82F6"] if is_multi_better else ["#3B82F6", "#94A3B8"]
         strat_labels = [
             f"${spot_cost:,.2f}/ton" + ("<br>★ Recommended" if not is_multi_better else ""),
             f"${multi_cost:,.2f}/ton" + ("<br>★ Recommended" if is_multi_better else ""),
@@ -727,6 +727,8 @@ if predict:
             xaxis_title="Contracting Mechanism",
             yaxis_title="Average Freight Cost (USD/ton)",
             yaxis=dict(range=[0, max(strat_costs) * 1.25]),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)"
         )
         st.plotly_chart(fig_strat, use_container_width=True)
 
@@ -736,13 +738,49 @@ if predict:
                 f"💡 **Key Insight:** Multi-voyage contracts are cheaper in this scenario, "
                 f"saving ${savings:,.2f}/ton on average and winning in {strategy['multivoyage_win_pct']:.1f}% of simulations."
             )
+            multi_note = "Price locked in — less flexible, but cheaper on average here."
+            spot_note = "Flexible, no commitment — but fully exposed to price swings and higher expected costs."
         else:
             savings = multi_cost - spot_cost
             insight_strat = (
                 f"💡 **Key Insight:** Spot booking is cheaper in this scenario, "
                 f"saving ${savings:,.2f}/ton on average and winning in {strategy['spot_win_pct']:.1f}% of simulations."
             )
+            spot_note = "Flexible, no commitment — cheaper on average here with favorable spot conditions."
+            multi_note = "Price locked in — provides price certainty, but carries a slight term premium."
         st.info(insight_strat)
+
+        col_spot, col_multi = st.columns(2)
+        with col_spot:
+            st.markdown(
+                f"""
+                <div style="background-color: #10151D; border: 1px solid rgba(255,255,255,0.08);
+                            border-radius: 8px; padding: 10px 14px; height: 100%;">
+                    <div style="font-weight: 700; font-size: 0.92rem; color: {'#3B82F6' if not is_multi_better else '#F5F7FA'}; margin-bottom: 3px;">
+                        Spot Booking {'★' if not is_multi_better else ''}
+                    </div>
+                    <div style="font-size: 0.83rem; color: #98A2B3; line-height: 1.4;">
+                        Flexible, no commitment — but fully exposed to price swings.
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        with col_multi:
+            st.markdown(
+                f"""
+                <div style="background-color: #10151D; border: 1px solid rgba(255,255,255,0.08);
+                            border-radius: 8px; padding: 10px 14px; height: 100%;">
+                    <div style="font-weight: 700; font-size: 0.92rem; color: {'#3B82F6' if is_multi_better else '#F5F7FA'}; margin-bottom: 3px;">
+                        Multi-Voyage Contract {'★' if is_multi_better else ''}
+                    </div>
+                    <div style="font-size: 0.83rem; color: #98A2B3; line-height: 1.4;">
+                        Price locked in — less flexible, but cheaper on average here.
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
     st.divider()
     st.caption("Forecasts use synthetic/proxy data for prototype demonstration (no official "
